@@ -32,30 +32,40 @@ def serial_ports():
             pass
     return result
 
-# Open connection
-ports = serial_ports()
-print(ports[0])
-ser = serial.Serial(ports[0], 9600, timeout=5)
-
 while True:
-    
-    # Read from serial, send to website
-    line = ser.readline().decode('UTF-8')
-    if len(line) > 4 and line[:4] == 'temp':
-        print(line)
-        sendURL = 'HTTP://192.168.1.18/send.php?' + line 
-        print(urllib.request.urlopen(sendURL).read())
-    else:
-        while len(line) > 2:
-            print(line)
+    try:
+        # Open connection
+        ports = serial_ports()
+        if len(ports) == 0:
+            raise EnvironmentError('Arduino is not connected')
+        print('connecting to arduino on: ' + ports[0])
+        ser = serial.Serial(ports[0], 9600, timeout=5)
+        
+        while True:
+            
+            # Read from serial, send to website
             line = ser.readline().decode('UTF-8')
-
-    # Read from website, send to serial
-    recieveURL = 'HTTP://192.168.1.18/recieve.php'
-    response = urllib.request.urlopen(recieveURL).read()
-    ser.write(response)
-    print(response)
-    
-    time.sleep(9)
-
-ser.close()
+            if len(line) > 4 and line[:4] == 'temp':
+                print(line)
+                sendURL = 'HTTP://192.168.1.18/send.php?' + line 
+                print(urllib.request.urlopen(sendURL).read())
+            else:
+                while len(line) > 2:
+                    print(line)
+                    line = ser.readline().decode('UTF-8')
+        
+            # Read from website, send to serial
+            recieveURL = 'HTTP://192.168.1.18/recieve.php'
+            response = urllib.request.urlopen(recieveURL).read()
+            ser.write(response)
+            print(response)
+            
+            time.sleep(30)
+        
+        ser.close()
+    except BaseException as e:
+        print('Error: ' + str(e))
+        print('Trying again...')
+        time.sleep(30)
+        
+        
