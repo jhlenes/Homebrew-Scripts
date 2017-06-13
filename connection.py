@@ -3,12 +3,13 @@ import glob
 import json
 import sys
 import time
+import traceback
 
 import requests
 import serial
 
 # delays in seconds
-UPDATE_DELAY = 60
+UPDATE_DELAY = 30
 SEND_DELAY = 5 * 60
 RETRY_CONNECTION_DELAY = 30
 
@@ -74,16 +75,16 @@ def update_temperature_data(ser):
     global send_time
     global batch_id
     line = ser.readline().decode('UTF-8')
-    if len(line) > 4 and line[:4] == 'temp':
+    if len(line) > 4 and line[:4] == 'temp' and batch_id > 0:
         if time.time() - send_time > SEND_DELAY:
             send_time = time.time()
-            send_url = BASE_URL + "/send/?id=" + batch_id + "&" + line
+            send_url = BASE_URL + "/send/?id=" + str(batch_id) + "&" + line
             print("Data sent to website:", line)
             print("Response from website:", requests.get(send_url).text)
         else:
             # the data will not be inserted into the database, but instead used to show realtime stats on the page
-            send_url = BASE_URL + "/send/?id=" + batch_id + "&" + line + "&update"
-            print("Data sent to website:", line)
+            send_url = BASE_URL + "/send/?id=" + str(batch_id) + "&" + line + "&update"
+            print("Data sent to website:", line + "&update")
             print("Response from website:", requests.get(send_url).text)
 
     else:  # system not active or some small error
@@ -116,20 +117,25 @@ def main():
             # get serial connection
             ser = get_serial()
             while True:
-                # update website with latest temperature data from serial
-                update_temperature_data(ser)
 
                 # get setpoint from website and send it to the serial
                 setpoint = get_setpoint()
-                ser.write(';;{:.1f}'.format(setpoint))
-                print("Setpoint sent to Arduino: {:.1f}".format(setpoint))
+                if setpoint < 0:
+                    ser.write((':::').encode())
+                    print("Setpoint sent to Arduino: NOT_RUNNING")
+                else:
+                    ser.write((';;{:.1f}'.format(setpoint)).encode())
+                    print("Setpoint sent to Arduino: {:.1f}".format(setpoint))
+
+                # update website with latest temperature data from serial
+                update_temperature_data(ser)
 
                 # wait
                 print("\n")
                 time.sleep(UPDATE_DELAY)
 
-        except BaseException as e:
-            print("Error:", str(e))
+        except:
+            traceback.format_exc()
             print("Trying again...\n")
             time.sleep(RETRY_CONNECTION_DELAY)
 
