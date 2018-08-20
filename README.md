@@ -12,6 +12,14 @@ echo "requests" >> requirements.txt
 pip install -r requirements.txt
 ```
 
+## Clone website and give access to database
+```
+cd ~/homebrew-django
+git clone https://github.com/jhlenes/Homebrew-Django.git
+sudo chown www-data:www-data Homebrew-Django/
+sudo chown www-data:www-data Homebrew-Django/db.sqlite3
+```
+
 ## Install apache
 ```
 sudo apt install -y apache2 apache2-dev
