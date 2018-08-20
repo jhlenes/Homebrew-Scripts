@@ -19,6 +19,11 @@ git clone https://github.com/jhlenes/Homebrew-Django.git
 sudo chown www-data:www-data Homebrew-Django/
 sudo chown www-data:www-data Homebrew-Django/db.sqlite3
 ```
+Collect static files (do this every time you make changes to static files)
+```
+cd Homebrew-Django
+python3 manage.py collectstatic
+```
 
 ## Install apache
 ```
@@ -45,7 +50,7 @@ At bottom of ```/etc/apache2/apache2.conf```, add this:
 ```
 LoadModule wsgi_module /usr/lib/apache2/modules/mod_wsgi.so
 
-WSGIDaemonProcess homebrew python-home=/home/pi/homebrew-django/homebrew-env python-path=/home/pi/homebrew-django/Homebrew-Django
+WSGIDaemonProcess homebrew python-home=/home/pi/homebrew-django/homebrew-env python-path=/home/pi/homebrew-djang$
 WSGIProcessGroup homebrew
 WSGIApplicationGroup %{GLOBAL}
 
@@ -54,9 +59,9 @@ WSGIPythonHome /home/pi/homebrew-django/homebrew-env
 #WSGIPythonPath /home/pi/homebrew-django/Homebrew-Django
 
 Alias /favicon.ico /home/pi/homebrew-django/Homebrew-Django/main/static/main/favicon.ico
-Alias /static/ /home/pi/homebrew-django/Homebrew-Django/main/static/
+Alias /static/ /home/pi/homebrew-django/Homebrew-Django/Homebrew/static/
 
-<Directory /home/pi/homebrew-django/Homebrew-Django/main/static>
+<Directory /home/pi/homebrew-django/Homebrew-Django/Homebrew/static>
 Require all granted
 </Directory>
 
@@ -65,7 +70,6 @@ Require all granted
 Require all granted
 </Files>
 </Directory>
-
 ```
 
 ## Run Arduino communication script on boot
