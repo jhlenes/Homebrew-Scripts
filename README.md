@@ -5,7 +5,7 @@
 mkdir homebrew-django
 cd homebrew-django
 python3 -m venv homebrew-env
-source myvenv/bin/activate
+source homebrew-env/bin/activate
 python3 -m pip install --upgrade pip
 echo "Django~=2.0.6" >> requirements.txt
 echo "requests" >> requirements.txt
