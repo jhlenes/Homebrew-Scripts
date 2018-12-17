@@ -50,22 +50,22 @@ At bottom of ```/etc/apache2/apache2.conf```, add this:
 ```
 LoadModule wsgi_module /usr/lib/apache2/modules/mod_wsgi.so
 
-WSGIDaemonProcess homebrew python-home=/home/pi/homebrew-django/homebrew-env python-path=/home/pi/homebrew-djang$
+WSGIDaemonProcess homebrew python-home=/home/henrik/homebrew-django/homebrew-env python-path=/home/henrik/homebrew-django/Homebrew-Django
 WSGIProcessGroup homebrew
 WSGIApplicationGroup %{GLOBAL}
 
-WSGIScriptAlias / /home/pi/homebrew-django/Homebrew-Django/Homebrew/wsgi.py process-group=homebrew
-WSGIPythonHome /home/pi/homebrew-django/homebrew-env
-#WSGIPythonPath /home/pi/homebrew-django/Homebrew-Django
+WSGIScriptAlias / /home/henrik/homebrew-django/Homebrew-Django/Homebrew/wsgi.py process-group=homebrew
+WSGIPythonHome /home/henrik/homebrew-django/homebrew-env
+WSGIPythonPath /home/henrik/homebrew-django/Homebrew-Django
 
-Alias /favicon.ico /home/pi/homebrew-django/Homebrew-Django/main/static/main/favicon.ico
-Alias /static/ /home/pi/homebrew-django/Homebrew-Django/Homebrew/static/
+Alias /favicon.ico /home/henrik/homebrew-django/Homebrew-Django/main/static/main/favicon.ico
+Alias /static/ /home/henrik/homebrew-django/Homebrew-Django/Homebrew/static/
 
-<Directory /home/pi/homebrew-django/Homebrew-Django/Homebrew/static>
+<Directory /home/henrik/homebrew-django/Homebrew-Django/Homebrew/static>
 Require all granted
 </Directory>
 
-<Directory /home/pi/homebrew-django/Homebrew-Django/Homebrew>
+<Directory /home/henrik/homebrew-django/Homebrew-Django/Homebrew>
 <Files wsgi.py>
 Require all granted
 </Files>
