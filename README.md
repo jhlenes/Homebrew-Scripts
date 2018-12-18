@@ -74,12 +74,14 @@ Require all granted
 
 ## Run Arduino communication script on boot
 
-Install tmux with:
+Install tmux and pyserial with:
 ```
-sudo apt install -y tmux
+sudo apt install -y tmux python3-pip
+pip3 install pyserial
 ```
 
 Add this line to ```/etc/rc.local``` before ```exit 0```:
 ```
-tmux new-session -d -s homebrew-connection \; send-keys "python3 /home/pi/Homebrew-Scripts/connection.py" Enter
+sudo -H -u henrik tmux new-session -d -s homebrew-connection \; send-keys "python3 /home/henrik/Homebrew-Scripts/connection.py" Enter
 ```
+If the file doesn't already exist you'll have to add ```#!/bin/bash``` to the beginning of the file, and make the file executable with ```chmod 755 /etc/rc.local```.
