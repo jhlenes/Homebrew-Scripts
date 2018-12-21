@@ -85,3 +85,20 @@ Add this line to ```/etc/rc.local``` before ```exit 0```:
 sudo -H -u henrik tmux new-session -d -s homebrew-connection \; send-keys "python3 /home/henrik/Homebrew-Scripts/connection.py" Enter
 ```
 If the file doesn't already exist you'll have to add ```#!/bin/bash``` to the beginning of the file, and make the file executable with ```chmod 755 /etc/rc.local```.
+
+## Set serial port permission
+Open Terminal and type:
+```
+ls -l /dev/ttyACM*
+```
+You will get something like:
+```
+crw-rw---- 1 root dialout 166, 0 des.  21 11:22 /dev/ttyACM0
+```
+The group owner of the file is ```dialout```. Now we need to add our user to the group:
+```
+sudo usermod -a -G dialout henrik 
+```
+You will need to log out and log in again for this change to take effect.
+
+
